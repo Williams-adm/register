@@ -9,7 +9,20 @@ class ProductController extends Controller
 {
     public function index() {
         $produc = Product::all();
-
-        return response()->json($produc);
+        return $produc;
     }
+
+    public function store() {}
+
+    public function create() {}
+
+    public function show() {
+        
+    }
+
+    public function update() {}
+
+    public function destroy() {}
+
+    public function edit() {}
 }
