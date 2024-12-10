@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->decimal('discount', 4, 2);
             $table->integer('stock');
-            $table->string('photo_path');
+            $table->string('photo_path')->nullable();
             $table->boolean('status')->default(true);
             
             $table->unsignedBigInteger('category_id')->nullable();
