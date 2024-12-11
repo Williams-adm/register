@@ -20,7 +20,7 @@
     <tbody class="bg-white">
         @foreach ($categories as $category)
         <tr class="border-b hover:bg-gray-100">
-            <td class="px-4 py-2 text-sm text-gray-800">{{$loop->iteration}}</td>
+            <td class="px-4 py-2 text-sm text-gray-800">{{ $categories->firstItem() + $loop->iteration - 1 }}</td>
             <td class="px-4 py-2 w-24">
                 <img class="rounded-lg shadow-md h-14 w-24" src="{{ $category->image_path ? asset('storage/' . $category->image_path) : asset('assets/img/no-image.jpg') }}" alt="Imagen de categoría">
             </td>
@@ -31,6 +31,7 @@
                 <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
+                    <input type="hidden" name="page" value="{{ request()->get('page', 1) }}">
                     <button type="submit" class="bg-orange-300 p-2 rounded-lg" onclick="return confirm('¿Estas seguro?')">Eliminar</button>
                 </form>
             </td>

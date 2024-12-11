@@ -30,13 +30,6 @@ class Product extends Model
         );
     }
 
-    protected function photoPath(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value) => Storage::url($value),
-        );
-    }
-
     public function category()
     {
         return $this->belongsTo(Category::class);

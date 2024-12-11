@@ -13,7 +13,7 @@ Route::prefix('products')->controller(ProductController::class)->group(function(
     Route::post('/', 'store')->name('products.store');
     Route::get('/create', 'create')->name('products.create');
     Route::get('/{product}', 'show')->name('products.show');
-    Route::match(['put', 'patch'], '{product}', 'update')->name('products.update');
+    Route::patch('{product}', 'update')->name('products.update');
     Route::delete('/{product}', 'destroy')->name('products.destroy');
     Route::get('/{product}/edit', 'edit')->name('products.edit');
 });

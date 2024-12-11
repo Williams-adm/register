@@ -1,6 +1,6 @@
 @extends('templates.show')
 
-@section('title', 'Ver producto')
+@section('title', 'Ver Categoria')
 
 @section('back', route('categories.index'))
 

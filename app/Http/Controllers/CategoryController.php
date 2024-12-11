@@ -64,7 +64,7 @@ class CategoryController extends Controller
 
         } catch (QueryException $e) {
             Log::error('Error al intentar crear la categoría: ' . $e->getMessage());
-            return response()->json(['error' => 'Error al crear actualizar la categoría'], 400);
+            return response()->json(['error' => 'Error al crear la categoría'], 400);
 
         } catch (Exception $e) {
             Log::error('Error inesperado: ' . $e->getMessage());
@@ -151,7 +151,9 @@ class CategoryController extends Controller
                 Storage::disk('public')->delete($category->image_path);
             } 
             $category->delete();
-            return redirect()->route('categories.index')->with('success', 'Category deleted successfully');
+
+            $currentPage = request()->get('page', 1);
+            return redirect()->route('categories.index', ['page' => $currentPage])->with('success', 'Category deleted successfully');
 
         }catch(QueryException $e){
             Log::error('Error al intentar eliminar la categoría: ' . $e->getMessage());
