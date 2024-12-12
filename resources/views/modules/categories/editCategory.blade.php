@@ -2,7 +2,7 @@
 
 @section('title', 'Editar Categoria')
 
-@section('back', route('categories.index'))
+@section('back', route('categories.index', ['page' => $currentPage]))
 
 @section('formAction', route('categories.update', $category))
 

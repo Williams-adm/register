@@ -2,7 +2,7 @@
 
 @section('title', 'Ver producto')
 
-@section('back', route('products.index'))
+@section('back', route('products.index', ['page' => $currentPage]))
 
 @section('content')
     <div>

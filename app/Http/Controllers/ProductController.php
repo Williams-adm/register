@@ -19,11 +19,12 @@ class ProductController extends Controller
     public function index(Request $request) {
         try{
             $perPage = $request->get('per_page', 15);
+            $page = $request->get('page', 1);
             if (!is_numeric($perPage) || $perPage <= 0) {
                 return response()->json(['error' => 'El valor de "per_page" debe ser un número mayor que 0.'], 400);
             }
             $products = Product::paginate($perPage);
-            return view('modules.products.listProduct', compact('products'));
+            return view('modules.products.listProduct', compact('products', 'page'));
 
         } catch (QueryException $e) {
             Log::error('Error al intentar listar los productos: ' . $e->getMessage());
@@ -35,10 +36,11 @@ class ProductController extends Controller
         }
     }
     
-    public function create() {
+    public function create(Request $request) {
         try {
+            $currentPage = $request->get('page', 1);
             $categories = Category::all();
-            return view('modules.products.createProduct', compact('categories'));
+            return view('modules.products.createProduct', compact('categories', 'currentPage'));
         } catch (Exception $e) {
             Log::error('Error inesperado: ' . $e->getMessage());
             return response()->json(['error' => 'Error inesperado.'], 500);
@@ -75,10 +77,11 @@ class ProductController extends Controller
         }
     }
 
-    public function show(Product $product) {
+    public function show(Product $product, Request $request) {
         try {
+            $currentPage = $request->get('page', 1);
             $showCategory = (new ProductResource($product))->toArray(request());
-            return view('modules.products.showProduct', compact('showCategory'));
+            return view('modules.products.showProduct', compact('showCategory', 'currentPage'));
         } catch (QueryException $e) {
             Log::error('Error al intentar ver en detalle la categoría: ' . $e->getMessage());
             return response()->json(['error' => 'Error al intentar ver en detalle la categoría'], 400);
@@ -89,10 +92,11 @@ class ProductController extends Controller
     }
     
 
-    public function edit(Product $product) {
+    public function edit(Product $product, Request $request) {
         try {
+            $currentPage = $request->get('page', 1);
             $categories = Category::all();
-            return view('modules.products.editProduct', compact('product', 'categories'));
+            return view('modules.products.editProduct', compact('product', 'categories', 'currentPage'));
         } catch (Exception $e) {
             Log::error('Error inesperado: ' . $e->getMessage());
             return response()->json(['error' => 'Error inesperado.'], 500);

@@ -2,7 +2,7 @@
 
 @section('title', 'Editar Productos')
 
-@section('back', route('products.index'))
+@section('back', route('products.index', ['page' => $currentPage]))
 
 @section('formAction', route('products.update', $product))
 

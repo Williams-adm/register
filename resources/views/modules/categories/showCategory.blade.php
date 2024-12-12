@@ -2,7 +2,7 @@
 
 @section('title', 'Ver Categoria')
 
-@section('back', route('categories.index'))
+@section('back', route('categories.index', ['page' => $currentPage]))
 
 @section('content')
     <div>

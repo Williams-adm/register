@@ -2,7 +2,7 @@
 
 @section('title', 'Lista de Categorias')
 
-@section('buttonCreate', route('categories.create'))
+@section('buttonCreate', route('categories.create', ['page' => request()->get('page', 1)]))
 
 @if ($categories->isEmpty())
     @section('empty')
@@ -26,8 +26,8 @@
             </td>
             <td class="px-4 py-2 text-sm text-gray-800">{{$category->name}}</td>
             <td class="px-4 py-2 text-sm text-gray-800">
-                <a href="{{ route('categories.show', $category->id) }}" class="bg-orange-300 p-2 rounded-lg">Ver</a>
-                <a href="{{ route('categories.edit', $category->id) }}" class="bg-orange-300 p-2 rounded-lg">Editar</a>
+                <a href="{{ route('categories.show', [$category->id, 'page' => request()->get('page', 1)]) }}" class="bg-orange-300 p-2 rounded-lg">Ver</a>
+                <a href="{{ route('categories.edit', [$category->id, 'page' => request()->get('page', 1)]) }}" class="bg-orange-300 p-2 rounded-lg">Editar</a>
                 <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
                     @csrf
                     @method('DELETE')

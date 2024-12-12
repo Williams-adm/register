@@ -2,7 +2,7 @@
 
 @section('title', 'Lista de Productos')
 
-@section('buttonCreate', route('products.create'))
+@section('buttonCreate', route('products.create', ['page' => request()->get('page', 1)]))
 
 @if ($products->isEmpty())
     @section('empty')
@@ -34,8 +34,8 @@
             <td class="px-4 py-2 text-sm text-gray-800">S/. {{$product->price}}</td>
             <td class="px-4 py-2 text-sm text-gray-800">{{$product->discount}} %</td>
             <td class="px-4 py-2 text-sm text-gray-800">
-                <a href="{{ route('products.show', $product->id) }}" class="bg-orange-300 p-2 rounded-lg">Ver</a>
-                <a href="{{ route('products.edit', $product->id) }}" class="bg-orange-300 p-2 rounded-lg">Editar</a>
+                <a href="{{ route('products.show', [$product->id, 'page' => request()->get('page', 1)]) }}" class="bg-orange-300 p-2 rounded-lg">Ver</a>
+                <a href="{{ route('products.edit', [$product->id, 'page' => request()->get('page', 1)]) }}" class="bg-orange-300 p-2 rounded-lg">Editar</a>
                 <form action="{{ route('products.destroy', $product->id) }}" method="POST">
                     @csrf
                     @method('DELETE')

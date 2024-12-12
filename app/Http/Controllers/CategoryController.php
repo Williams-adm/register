@@ -18,11 +18,12 @@ class CategoryController extends Controller
     public function index(Request $request){
         try{
             $perPage = $request->get('per_page', 15);
+            $page = $request->get('page', 1);
             if (!is_numeric($perPage) || $perPage <= 0) {
                 return response()->json(['error' => 'El valor de "per_page" debe ser un número mayor que 0.'], 400);
             }
             $categories = Category::paginate($perPage);
-            return view('modules.categories.listCategory', compact('categories'));
+            return view('modules.categories.listCategory', compact('categories', 'page'));
 
         } catch (QueryException $e) {
             Log::error('Error al intentar listar la categoría: ' . $e->getMessage());
@@ -34,9 +35,10 @@ class CategoryController extends Controller
         }
     }
     
-    public function create(){
+    public function create(Request $request){
         try{
-            return view('modules.categories.createCategory');
+            $currentPage = $request->get('page', 1);
+            return view('modules.categories.createCategory', compact('currentPage'));
 
         } catch (Exception $e) {
             Log::error('Error inesperado: ' . $e->getMessage());
@@ -72,10 +74,11 @@ class CategoryController extends Controller
         }
     }
 
-    public function show(Category $category){
+    public function show(Category $category, Request $request){
         try{
+            $currentPage = $request->get('page', 1);
             $showCategory = (new CategoryResource($category))->toArray(request());
-            return view('modules.categories.showCategory', compact('showCategory'));
+            return view('modules.categories.showCategory', compact('showCategory', 'currentPage'));
 
         } catch (QueryException $e) {
             Log::error('Error al intentar ver en detalle la categoría: ' . $e->getMessage());
@@ -87,9 +90,10 @@ class CategoryController extends Controller
         }
     }
 
-    public function edit(Category $category){
+    public function edit(Category $category, Request $request){
         try{
-            return view('modules.categories.editCategory', compact('category'));
+            $currentPage = $request->get('page', 1);
+            return view('modules.categories.editCategory', compact('category', 'currentPage'));
 
         } catch (Exception $e) {
             Log::error('Error inesperado: ' . $e->getMessage());

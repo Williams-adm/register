@@ -2,7 +2,7 @@
 
 @section('title', 'Crear Categoria')
 
-@section('back', route('categories.index'))
+@section('back', route('categories.index', ['page' => $currentPage]))
 
 @section('formAction', route('categories.store'))
 
