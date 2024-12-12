@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
@@ -90,7 +91,7 @@ class ProductController extends Controller
 
     public function edit(Product $product) {
         try {
-            $categories = Category::alll();
+            $categories = Category::all();
             return view('modules.products.editProduct', compact('product', 'categories'));
         } catch (Exception $e) {
             Log::error('Error inesperado: ' . $e->getMessage());
@@ -98,9 +99,62 @@ class ProductController extends Controller
         }
     }
 
-    public function update() {}
+    public function update(UpdateProductRequest $request, Product $product) {
+        try {
+            $name = $request->input('name', $product->name);
+            $description = $request->input('description', $product->description);
+            $price = $request->input('price', $product->price);
+            $stock = $request->input('stock', $product->stock);
+            $discount = $request->input('discount', $product->discount);
+            $category_id = $request->input('category_id', $product->category_id);
+            $photo_path = $product->photo_path;
 
-    
+            $changes = [
+                'name' => $name !== $product->name,
+                'description' => $description !== $product->description,
+                'price' => $price !== $product->price,
+                'stock' => $stock != $product->stock,
+                'discount' => $discount !== $product->discount,
+                'category_id' => $category_id != $product->category_id,
+                'photo_path' => $request->hasFile('photo_path')
+            ];
+
+            if (!in_array(true, $changes)) {
+                return redirect()->route('products.edit', $product->id)->with('info', 'There were no changes in the category');
+            }
+
+            if ($changes['photo_path']) {
+                if ($product->photo_path) {
+                    Storage::disk('public')->delete($product->photo_path);
+                }
+                $imageName = Str::slug($name) . '.' . $request->file('photo_path')->getClientOriginalExtension();
+                $photo_path = $request->file('photo_path')->storeAs('Product', $imageName, 'public');
+            } elseif ($changes['name'] && $product->photo_path) {
+                // Renombrar imagen si solo cambió el nombre
+                $extension = pathinfo($product->photo_path, PATHINFO_EXTENSION);
+                $newImageName = 'Product/' . Str::slug($name) . '.' . $extension;
+                Storage::disk('public')->move($product->photo_path, $newImageName);
+                $photo_path = $newImageName;
+            }
+
+            $product->update([
+                'name' => $name,
+                'description' => $description,
+                'price' => $price,
+                'stock' => $stock,
+                'discount' => $discount,
+                'category_id' => $category_id,
+                'photo_path' => $photo_path
+            ]);
+            return redirect()->route('products.edit', $product->id)->with('success', 'Product updated successfully');
+        } catch (QueryException $e) {
+            Log::error('Error al intentar actualizar el producto: ' . $e->getMessage());
+            return response()->json(['error' => 'Error al intentar actualizar el producto'], 400);
+        } catch (Exception $e) {
+            Log::error('Error inesperado: ' . $e->getMessage());
+            return response()->json(['error' => 'Error inesperado.'], 500);
+        }
+    }
 
     public function destroy(Product $product) {
         try {

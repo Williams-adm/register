@@ -3,5 +3,5 @@ window.onload = () => {
         if (document.getElementById('alert') != null) {
             document.getElementById('alert').remove()
         }
-    }, 2000);
+    }, 3000);
 }
