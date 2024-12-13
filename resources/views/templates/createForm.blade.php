@@ -23,7 +23,7 @@
     </div>
 @endif
     <header>
-        <h1 class="text-center text-xl font-semibold">@yield('title')</h1>
+        <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">@yield('title')</h1>
     </header>
     <main>
         <a href="@yield('back')" class="bg-orange-300 p-2 rounded-lg">Regresar</a>
